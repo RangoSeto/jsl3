@@ -38,6 +38,10 @@ body{
 	opacity: 1;
 }
 
+.dot.done{
+	background-color: green;
+}
+
 #form{
 	width: 90%;
 	border-left: 2px solid #eee;
@@ -63,7 +67,7 @@ input:focus{
 	outline: none;
 }
 input.invalid{
-	border dotted red;
+	border: 2px dotted red;
 }
 
 .d-flex{
@@ -90,5 +94,25 @@ input.invalid{
 	background-color: #bbb;
 }
 
+#result-container{
+	display: none;
 
+	width: 90%;
+}
+
+#result-container ul li{
+	list-style-type: none;
+	padding: 3px;
+}
+
+.submit-btn{
+	width: 100%;
+	background-color: steelblue;
+	color: #fff;
+	font-size: 20px;
+	border: none;
+	padding: 5px 0;
+	cursor: pointer;
+
+}
 
