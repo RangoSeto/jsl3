@@ -1,0 +1,24 @@
+*{
+	box-sizing: border-box;
+}
+
+body{
+	height:100vh;
+	font-family: sans-serif;
+	background-color: #f4f4f4;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+}
+
+.form-control{
+	padding: 10px;
+}
+
+#game-container span{
+	display: block;
+
+	margin-top: 15px;
+}
