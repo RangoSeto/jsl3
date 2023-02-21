@@ -8,21 +8,83 @@ const getbtn = document.querySelector('#btn');
 const message1 = document.querySelector('.message1');
 const message2 = document.querySelector('.message2');
 
-let min = 1,
-max = 10,
-gammeleft = 3,
+const getgamecnt = document.getElementById('game-container');
+const getmicbtn = document.getElementById('mic-btn');
+
+const getvoccnt = document.getElementById('voice-container');
+
+let min = 10,
+max = 100,
+gameleft = 3,
 // winningnum = randomnum(min,max);
-winningnum = 5;
+winningnum = randomnum(min,max);
 
 minnum.innerText = min;
 maxnum.textContent = max;
 
 function randomnum(min,max){
-	let getrdm = Math.floor(Math.random()*(max-min)+1);
+	// let getrdm = Math.floor(Math.random()*(max-min)+1);
+	let getrdm = Math.floor(Math.random()*(max-min)+10);
 	return getrdm;
 }
 
-// console.log(winningnum);
+console.log(winningnum);
+
+
+
+// For Chrome Browser Support
+// orခံထားတဲ့၂ခုကို ဒီဘက်ထဲထည့်လိုက်တာ
+window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+let getrec = new window.SpeechRecognition;
+
+getmicbtn.addEventListener('click',function(){
+	// console.log('working');
+
+	// console.log(getrec);
+
+	// Start Recognition, start() come from Recognition api
+	getrec.start();
+
+						// result ကိုလိုချင်လို့ဒါကိုသုံးရ
+	getrec.addEventListener('result',(e)=> talking(e));
+
+
+});
+
+function talking(ele){
+	// console.log(ele);
+	const micresult = ele.results[0][0].transcript;
+	// console.log(micresult);
+
+	micmessage(micresult);
+	getnumber(micresult);
+}
+
+function micmessage(msg){
+	getvoccnt.innerHTML = `
+		<span class="voicemessage">Did you say !!! ${msg}</span>
+	`;
+}
+
+function getnumber(msg){
+	const getnum = +msg;
+
+	// console.log(typeof getnum);
+
+	if(Number.isNaN(getnum)){
+		getvoccnt.innerHTML += `<div>This is not a valid number.</div>`;
+		// return;
+		return false; //အောက်ကဟာတွေဆက်မလုပ်စေချင်တော့ရင် return ပြန်ပေးလိုက်
+	}
+
+	getinput.value = getnum;
+
+	//Stop Recognition , stop() come from Recognition api
+	getrec.stop();  //rec လုပ်တာကိုရပ်လိုက်တာ talking fun ရဲ့အောက်ဆုံးသွားရေးလည်းရ
+}
+
+
 
 function setmessage1(msg,color){
 	message1.textContent = msg;
@@ -47,6 +109,7 @@ function gameover(won,msg){
 	setmessage1(msg,color);
 
 	getbtn.value = 'Play again';
+	getbtn.classList.add('playagain');
 }
 
 getbtn.addEventListener('click',function(){
@@ -64,13 +127,37 @@ getbtn.addEventListener('click',function(){
 
 		gameleft--;
 
-		if(gammeleft === 0){
+		if(gameleft === 0){
 			// Game Over LOSE
+
+			gameover(false,`Game Over, You Lost, Thhe correct number is ${winningnum}`);
+
 		}else{
 			// Continue Game
+
+			getinput.style.borderColor = 'red';
+
+			getinput.value = '';
+
+			setmessage1(`${guess} is not correct , ${gameleft} guess left`,'blue');
+
+			if(guess > winningnum){
+				getvoccnt.innerHTML += `<div>You should go down a bit.</div>`;
+			}else if (guess < winningnum){
+				getvoccnt.innerHTML += `<div>You should go up a bit.</div>`;
+			}
+
 		}
 
 	}
 });
 
-// 9VI
+getgamecnt.addEventListener('mousedown',function(e){
+	console.log(e.target);
+
+	if(e.target.classList.contains('playagain')){
+		window.location.reload();
+	}
+});
+
+
